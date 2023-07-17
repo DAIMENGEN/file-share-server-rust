@@ -1,6 +1,8 @@
 use std::fs;
 use toml::Value;
 
+
+#[derive(Debug,PartialEq, Eq)]
 pub struct Address {
     pub ip: String,
     pub port: u16,
@@ -8,7 +10,7 @@ pub struct Address {
 }
 
 impl Address {
-    fn new(ip: String, port: String, access: String) -> Self {
+    pub fn new(ip: String, port: String, access: String) -> Self {
         let port: u16 = port.parse().expect("Wrong type of port number.");
         Address { ip , port , access}
     }
