@@ -46,7 +46,8 @@ pub fn get_custom_folder(target_file_path: &str) -> CustomFolder {
     let entries = fs::read_dir(file_path_buf.as_path()).expect("Unable to read folder.");
     for entry in entries {
         let entry = entry.expect("Unable to read file.");
-        let file_path = entry.path().as_path().to_str().unwrap().to_owned();
+        let file_path = entry.path().as_path().to_str().unwrap().to_owned().replace("\\", "/");
+        let absolute_file_path = fs::canonicalize(&file_path).unwrap().to_str().unwrap().to_owned();
         let file_name = entry.file_name().to_os_string().to_str().unwrap().to_owned();
         let mut link_path = String::from("Access not supported.");
         let file_format = file_name.as_str().split_once('.').unwrap().1.to_uppercase();
@@ -54,7 +55,7 @@ pub fn get_custom_folder(target_file_path: &str) -> CustomFolder {
         if SUPPORT_FILE_TYPE.contains(&file_format_ref) {
             link_path = format!("{0}/{1}/{2}/{3}", link, BASE_PATH, target_file_path,&file_name);
         }
-        let custom_file = CustomFile::new(file_name, file_path, link_path);
+        let custom_file = CustomFile::new(file_name, absolute_file_path, link_path);
         files_in_folder.push(custom_file);
     }
     let folder_name = file_path_buf.as_path().file_name().unwrap().to_str().unwrap().to_owned();
