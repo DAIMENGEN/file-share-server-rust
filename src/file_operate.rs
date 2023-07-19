@@ -45,7 +45,7 @@ pub struct QueryParams {
 #[post("/file_list")]
 pub async fn file_list(params: web::Form<QueryParams>) -> Result<impl Responder> {
     let address = common_operate::get_address();
-    let link = format!("http://{}:{}", address.access, address.port);
+    let link = format!("http://{}:{}", address.access_ip, address.access_port);
     let mut files_in_folder = Vec::<CustomFile>::new();
     let select_path = format!("{0}/{1}", BASE_PATH, &params.file_path);
     let file_path_buf = PathBuf::from(select_path);
