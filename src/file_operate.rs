@@ -53,10 +53,11 @@ pub async fn file_list(params: web::Form<QueryParams>) -> Result<impl Responder>
     for entry in entries {
         let entry = entry.expect("Unable to read file.");
         let file_path = entry.path().as_path().to_str().unwrap().to_owned();
-        let file_name = entry.file_name().to_os_string().to_str().unwrap().to_uppercase();
+        let file_name = entry.file_name().to_os_string().to_str().unwrap().to_owned();
         let mut link_path = String::from("Access not supported.");
-        let file_format = file_name.as_str().split_once('.').unwrap().1;
-        if SUPPORT_FILE_TYPE.contains(&file_format) {
+        let file_format = file_name.as_str().split_once('.').unwrap().1.to_uppercase();
+        let file_format_ref = file_format.as_str();
+        if SUPPORT_FILE_TYPE.contains(&file_format_ref) {
             link_path = format!("{0}/{1}/{2}/{3}", link, BASE_PATH, &params.file_path,&file_name);
         }
         let custom_file = CustomFile::new(file_name, file_path, link_path);
